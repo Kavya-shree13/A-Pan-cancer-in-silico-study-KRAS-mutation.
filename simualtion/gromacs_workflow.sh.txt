@@ -1,0 +1,110 @@
+# 🧬 GROMACS Molecular Dynamics for KRAS Muftant Complexes
+
+# Author: Kavya
+# Project: KRAS Mutation Docking and Simulation (PyRx + GROMACS)
+# Note: Choose the group of your choice where prompted in GROMACS.
+
+# ⚙️ STEP 1 — Generate topology for the receptor
+gmx pdb2gmx -f REC.pdb -ignh
+
+# Choose:
+# 8 → Charmm27 Force Field
+# 1 → TIP3P Water Model
+# (Tip: use same force field for receptor and ligand)
+
+# ⚙️ STEP 2 — Prepare ligand structure
+gmx editconf -f LIG.pdb -o lig.gro
+
+# Edit 'lig.gro' and 'conf.gro' as required, then convert back if needed
+gmx editconf -f conf.gro -o LIG.pdb
+
+# ⚙️ STEP 3 — Modify topology file
+# Add this line near the top:
+#   ; Include ligand topology
+#   #include "LIG.itp"
+# And at the bottom:
+#   LIG   1
+
+# ⚙️ STEP 4 — Create box and solvate
+gmx editconf -f conf.gro -d 1.0 -bt triclinic -o box.gro
+gmx solvate -cp box.gro -p topol.top -o box_sol.gro
+
+# ⚙️ STEP 5 — Add ions (requires 5 .mdp files)
+gmx grompp -f ions.mdp -c box_sol.gro -p topol.top -o ion.tpr
+
+# If error: "Too many warnings (1)."
+# Add -maxwarn 1 to ignore harmless warnings
+gmx grompp -f ions.mdp -c box_sol.gro -p topol.top -o ion.tpr -maxwarn 1
+
+# Add ions
+gmx genion -s ion.tpr -p topol.top -conc 0.1 -neutral -o box_sol_ion.gro
+# Choose group of solvent molecules:
+# Group 15 → 'SOL'
+# (Select: 15)
+
+# ⚙️ STEP 6 — Energy Minimization
+gmx grompp -f em.mdp -c box_sol_ion.gro -p topol.top -o em.tpr
+gmx mdrun -v -deffnm em
+
+# ⚙️ STEP 7 — Create ligand index file
+gmx make_ndx -f lig.gro -o index_lig.ndx
+# Type:
+#   0 & ! a H*
+# Then press 'q' to quit.
+
+# ⚙️ STEP 8 — Generate position restraints for ligand
+gmx genrestr -f lig.gro -n index_lig.ndx -o posre_lig.itp -fc 1000 1000 1000
+
+# Select group:
+#   3 → System_&_!H*
+
+# ⚙️ STEP 9 — Create combined index file
+gmx make_ndx -f em.gro -o index.ndx
+
+# Example groups printed:
+#  1  Protein
+# 13  LIG
+# To combine:
+# > 1|13
+# (This merges Protein and Ligand)
+# Then type:
+# > q
+
+# ⚙️ STEP 10 — NVT Equilibration
+gmx grompp -f nvt.mdp -c em.gro -r em.gro -p topol.top -n index.ndx -maxwarn 2 -o nvt.tpr
+gmx mdrun -v -deffnm nvt
+
+# ⚙️ STEP 11 — NPT Equilibration
+gmx grompp -f npt.mdp -c nvt.gro -r nvt.gro -p topol.top -n index.ndx -maxwarn 2 -o npt.tpr
+gmx mdrun -v -deffnm npt
+
+# ⚙️ STEP 12 — Production MD Run
+# Adjust simulation time in md.mdp (for 100 ns):
+gmx grompp -f md.mdp -c npt.gro -r npt.gro -p topol.top -n index.ndx -maxwarn 2 -o md.tpr
+gmx mdrun -v -deffnm md
+
+# ⚙️ STEP 13 — RMSD Analysis
+gmx rms -s md.tpr -f md.xtc -n index.ndx -o rmsd_ca.xvg -tu ns
+# Select: 1 (Protein) and 3 (C-alpha)
+xmgrace rmsd_ca.xvg
+
+# ⚙️ STEP 14 — RMSF Analysis
+gmx rmsf -s md.tpr -f md.xtc -o rmsf_ca.xvg -n index.ndx
+# Select: 1 (Protein)
+xmgrace rmsf_ca.xvg
+
+# ⚙️ STEP 15 — Hydrogen Bonds
+# Activate environment if needed
+conda activate gmx2024
+gmx hbond -s md.tpr -f md.xtc -n index.ndx -num hb.xvg
+# Select: 1 (Protein) and 13 (Ligand)
+xmgrace hb.xvg
+
+# ⚙️ STEP 16 — Radius of Gyration
+gmx gyrate -s md.tpr -f md.xtc -o gyrate_p.xvg
+# Select: 1 (Protein)
+xmgrace gyrate_p.xvg
+
+# ⚙️ STEP 17 — Solvent Accessible Surface Area (SASA)
+gmx sasa -s md.tpr -f md.xtc -n index.ndx -o sasa.xvg -surface protein_lig
+xmgrace sasa.xvg

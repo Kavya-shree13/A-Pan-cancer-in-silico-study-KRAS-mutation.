@@ -1,5 +1,5 @@
 # A-Pan-cancer-in-silico-study-KRAS-mutation.
-molecular docking and molecular dynamics simulation 
+
 # Overview
 KRAS mutations are among the most common oncogenic alterations in human cancers, including pancreatic, colorectal, and lung carcinomas. These mutations lead to constitutive activation of KRAS signaling, resulting in uncontrolled cell proliferation.  
 This project focuses on identifying potential inhibitors of wild-type and mutant KRAS proteins (G12C, G12D, G12V, and G12R) through **molecular docking** and **molecular dynamics (MD) simulations** using an **FDA-approved drug library**.

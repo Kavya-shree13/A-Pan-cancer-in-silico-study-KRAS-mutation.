@@ -1,5 +1,6 @@
-1. Import the receptor structures (WT, G12A, G12D, G12V, G13R)
+1. Import the receptor structures (WT, G12A, G12D, G12V, G12R)
 2. Import the FDA-approved ligand library
 3. Set the grid box dimensions
 4. Run AutoDock Vina docking
+
 5. Export binding affinities and poses

@@ -26,7 +26,7 @@ This project focuses on identifying potential inhibitors of wild-type and mutant
 - Binding affinities (kcal/mol) and interaction residues were analyzed using **Discovery Studio Visualizer** and **PyMOL**.  
 - The top-ranked ligands were shortlisted for molecular dynamics simulations.
 
-#3. *Molecular Dynamics Simulations*
+# 3. *Molecular Dynamics Simulations*
 - Conducted using **GROMACS 2024** to assess complex stability.  
 - **Force Field:** CHARMM36  
 - **Ligand Parameters:** Generated via **CGenFF**.  
@@ -38,7 +38,7 @@ This project focuses on identifying potential inhibitors of wild-type and mutant
   - SASA (Solvent Accessible Surface Area)  
   - Hydrogen Bond Analysis  
 
-#Results
+# Results
 Molecular docking studies were performed for the wild-type KRAS and four oncogenic mutants (G12C, G12D, G12V, and Q61H) using an FDA-approved ligand library.  
 Comparative binding affinity analysis revealed that several compounds exhibited **stronger binding interactions with the mutant forms of KRAS** compared to the wild-type protein.
 
@@ -54,12 +54,12 @@ MD simulation analyses further supported these findings:
 
 Collectively, these results suggest that **KRAS mutations enhance drug-binding potential** by reshaping the binding pocket environment, supporting the feasibility of **mutation-selective inhibitor design**.
 
-#Conclusion
+# Conclusion
 This in silico study successfully identified potential inhibitors for KRAS mutants using an FDA-approved ligand library.  
 The combined molecular docking and simulation approach provided insights into the **binding stability** and **dynamic behavior** of KRAS–ligand interactions.  
 Further **experimental validation** and **structure–activity optimization** are recommended to advance these findings toward clinical applicability.
 
-Tools and Software Used
+# Tools and Software Used
 
 FDA-approved Drug Library – Used as the ligand dataset for virtual screening; contains clinically validated small molecules.
 

@@ -39,7 +39,7 @@ This project focuses on identifying potential inhibitors of wild-type and mutant
   - Hydrogen Bond Analysis  
 
 # Results
-Molecular docking studies were performed for the wild-type KRAS and four oncogenic mutants (G12C, G12D, G12V, and Q61H) using an FDA-approved ligand library.  
+Molecular docking studies were performed for the wild-type KRAS and four oncogenic mutants (G12C, G12D, G12V, and G12R) using an FDA-approved ligand library.  
 Comparative binding affinity analysis revealed that several compounds exhibited **stronger binding interactions with the mutant forms of KRAS** compared to the wild-type protein.
 
 The wild-type KRAS served as a **reference (control)** to validate mutant-specific interactions.  
